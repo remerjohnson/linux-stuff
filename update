@@ -1,0 +1,6 @@
+#!/bin/sh
+sudo apt-get update \
+&& sudo apt-get $1 upgrade --show-upgraded \
+&& sudo apt-get $1 dist-upgrade \
+&& sudo apt-get $1 autoremove \
+&& sudo apt-get autoclean
