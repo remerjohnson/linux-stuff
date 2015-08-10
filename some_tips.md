@@ -20,3 +20,11 @@ was: 8.5 font
 
 Check for all installed pip packages (also check `pip -help`):  
 `pip list` 
+
+### Stuff to get
+karma
+xls2txt
+docx2txt
+csvkit
+ruby + bundler
+pyglet
