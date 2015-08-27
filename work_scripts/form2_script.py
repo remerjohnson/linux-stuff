@@ -1,22 +1,25 @@
+# -*- coding: utf-8 -*-
+
 from bs4 import BeautifulSoup
 import csv
 import re
 
 soup = BeautifulSoup (open('form2.html'), 'html.parser')
 
-f = csv.writer(open('bs_output.csv', 'w'))
+f = csv.writer(open('form2_output.csv', 'w'))
 f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Collection Description', 'Brief Description', 'Citation', 'Creative Commons Licensing'])
 
 # Variable for the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
 title =  title[19:]
 
-# Variable for names (Note: because of nastiness earlier in the HTML, 
-# prints a nasty big line in the beginning. Also, can't force UTF-8 encoding on a list
+# Variable for names
+# Finds all names, then puts them into an empty list 
+# Also prints in UTF-8 to handle special characters in names
 u_names = soup.find_all(string=re.compile(r'\s Full Name', flags=re.MULTILINE | re.UNICODE)) 
 names = []
 for name in u_names:
-	names.append( str(name[22:]) )
+	names.append( str(name[22:].encode('UTF-8')) )
 	continue
 
 # Variable for the date
@@ -27,8 +30,22 @@ date = date[29:]
 date_type = soup.find(string=re.compile(r'^Date T', flags=re.MULTILINE))
 date_type = date_type[12:]
 
-# Variable for the brief description, which takes the header then grabs next string
+# Description header variables
+# Not printed, but nice to have to get the responses on the next lines
+full_header = soup.find(string=re.compile(r'^Full ', flags=re.MULTILINE))
 brief_header = soup.find(string=re.compile(r'^Brief ', flags=re.MULTILINE))
+
+# Variable for the full description
+full_desc = []
+full1 = full_header.find_next(string=True)
+full2 = full1.find_next(string=True)
+full3 = full2.find_next(string=True)
+
+full_desc.append(full1)
+full_desc.append(full2)
+full_desc.append(full3)
+
+# Variable for the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
 
 # Variable for citations  <-- improve /w break loop?
@@ -39,4 +56,4 @@ brief = brief_header.find_next(string=True)
 cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
-f.writerow([title, names, date, date_type, '', brief.encode('UTF-8'), '', cc])
+f.writerow([title, '|'.join(names), date, date_type, full_desc, brief.encode('UTF-8'), '', cc])
