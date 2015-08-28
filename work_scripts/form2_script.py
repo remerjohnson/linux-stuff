@@ -8,7 +8,8 @@ soup = BeautifulSoup (open('form2.html'), 'html.parser')
 
 f = csv.writer(open('form2_output.csv', 'w'))
 f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Collection Description', 
-	'Brief Description', 'Citation', 'Creative Commons Licensing'])
+	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 
+	'Citation', 'Creative Commons Licensing'])
 
 # Variable to find the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
@@ -60,6 +61,14 @@ for lines in brief1:
 # Variable to find the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
 
+# Variable to find response to the question of if they already have identifiers for the data
+exist_id = soup.find(string=re.compile(r'^Do you al', flags=re.MULTILINE))
+exist_id = exist_id[50:]
+
+#
+doi_request = soup.find(string=re.compile(r'^Do you wa', flags=re.MULTILINE))
+doi_request = doi_request[60:]
+
 # Variable for citations  <-- improve /w break loop?
 # citation_header = soup.find(string=re.compile(r'^If the ', flags=re.MULTILINE))
 # citation = citation_header.find_next(string=True)
@@ -68,4 +77,5 @@ brief = brief_header.find_next(string=True)
 cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
-f.writerow([title, '|'.join(names), date, date_type, ' '.join(full_desc), brief.encode('UTF-8'), '', cc])
+f.writerow([title, '|'.join(names), date, date_type, ' '.join(full_desc), 
+	brief.encode('UTF-8'), exist_id, doi_request, '', cc])
