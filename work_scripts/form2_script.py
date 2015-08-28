@@ -7,50 +7,57 @@ import re
 soup = BeautifulSoup (open('form2.html'), 'html.parser')
 
 f = csv.writer(open('form2_output.csv', 'w'))
-f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Collection Description', 'Brief Description', 'Citation', 'Creative Commons Licensing'])
+f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Collection Description', 
+	'Brief Description', 'Citation', 'Creative Commons Licensing'])
 
-# Variable for the collection title
+# Variable to find the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
+# slice only the characters we need
 title =  title[19:]
 
-# Variable for names
-# Finds all names, then puts them into an empty list 
+# Variable to find names
+# Finds all names, then puts them into an empty list sliced 
 # Also prints in UTF-8 to handle special characters in names
+# as csv package doesn't handle UTF-8
 u_names = soup.find_all(string=re.compile(r'\s Full Name', flags=re.MULTILINE | re.UNICODE)) 
 names = []
 for name in u_names:
 	names.append( str(name[22:].encode('UTF-8')) )
 	continue
 
-# Variable for the date
+# Variable to find the date
 date = soup.find(string=re.compile(r'^Dates', flags=re.MULTILINE))
+# slice only the characters we need
 date = date[29:]
 
-# Variable for the date type
+# Variable to find the date type
 date_type = soup.find(string=re.compile(r'^Date T', flags=re.MULTILINE))
+# slice only the characters we need
 date_type = date_type[12:]
 
-# Description header variables
-# Not used, but nice to have to get the responses on the next lines
+# Set up Description sections header variables
+# Nice to have to get the responses on the next or previous lines
 full_header = soup.find(string=re.compile(r'^Full ', flags=re.MULTILINE))
 brief_header = soup.find(string=re.compile(r'^Brief ', flags=re.MULTILINE))
 brief_header_prev = brief_header.find_previous(string=True)
 
 # Create empty list for the full description
 full_desc = []
-# Create a variable that will find ALL strings after full_header
+# Create a variable to find ALL strings after full_header
 full1 = full_header.find_all_next(string=True)
-
+# Create a variable to find ALL strings after brief_header
+# The idea is this will isolate all unneeded lines after the full description
 brief1 = brief_header_prev.find_all_next(string=True)
 
-
+# Append the empty full_desc list with ALL lines after header
 for lines in full1:
 	full_desc.append( str(lines.encode('UTF-8')) )
 
+# Remove all unneeded lines from the full_desc list we just populated
 for lines in brief1:
 	full_desc.remove( str(lines.encode('UTF-8')) )
 
-# Variable for the brief description, which takes the header then grabs next string
+# Variable to find the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
 
 # Variable for citations  <-- improve /w break loop?
