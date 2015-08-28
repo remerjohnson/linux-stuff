@@ -34,18 +34,15 @@ date_type = date_type[12:]
 # Not used, but nice to have to get the responses on the next lines
 full_header = soup.find(string=re.compile(r'^Full ', flags=re.MULTILINE))
 brief_header = soup.find(string=re.compile(r'^Brief ', flags=re.MULTILINE))
+brief_header_prev = brief_header.find_previous(string=True)
 
 # Create empty list for the full description
 full_desc = []
 # Create a variable that will find ALL strings after full_header
 full1 = full_header.find_all_next(string=True)
 
-brief1 = brief_header.find_all_next(string=True)
-""" Create a variable that takes ALL those strings in full1
-then finds the end of what we want (line starts /w 'Brief') and matches everything previous
-full2 = full1.find_all_next(string=True)
-full_perfect = full1[0:4]
-full_desc.append(full_perfect)"""
+brief1 = brief_header_prev.find_all_next(string=True)
+
 
 for lines in full1:
 	full_desc.append( str(lines.encode('UTF-8')) )
