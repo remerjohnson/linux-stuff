@@ -31,19 +31,23 @@ date_type = soup.find(string=re.compile(r'^Date T', flags=re.MULTILINE))
 date_type = date_type[12:]
 
 # Description header variables
-# Not printed, but nice to have to get the responses on the next lines
+# Not used, but nice to have to get the responses on the next lines
 full_header = soup.find(string=re.compile(r'^Full ', flags=re.MULTILINE))
 brief_header = soup.find(string=re.compile(r'^Brief ', flags=re.MULTILINE))
 
-# Variable for the full description
+# Create empty list for the full description
 full_desc = []
-full1 = full_header.find_next(string=True)
-full2 = full1.find_next(string=True)
-full3 = full2.find_next(string=True)
+# Create a variable that will find ALL strings after full_header
+full1 = full_header.find_all_next(string=True)
 
-full_desc.append(full1)
-full_desc.append(full2)
-full_desc.append(full3)
+""" Create a variable that takes ALL those strings in full1
+then finds the end of what we want (line starts /w 'Brief') and matches everything previous
+full2 = full1.find_all_next(string=True)
+full_perfect = full1[0:4]
+full_desc.append(full_perfect)"""
+
+for lines in full1:
+	full_desc.append( str(lines.encode('UTF-8')) )
 
 # Variable for the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
@@ -56,4 +60,4 @@ brief = brief_header.find_next(string=True)
 cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
-f.writerow([title, '|'.join(names), date, date_type, full_desc, brief.encode('UTF-8'), '', cc])
+f.writerow([title, '|'.join(names), date, date_type, ' '.join(full_desc), brief.encode('UTF-8'), '', cc])
