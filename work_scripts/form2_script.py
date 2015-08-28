@@ -40,6 +40,7 @@ full_desc = []
 # Create a variable that will find ALL strings after full_header
 full1 = full_header.find_all_next(string=True)
 
+brief1 = brief_header.find_all_next(string=True)
 """ Create a variable that takes ALL those strings in full1
 then finds the end of what we want (line starts /w 'Brief') and matches everything previous
 full2 = full1.find_all_next(string=True)
@@ -48,6 +49,9 @@ full_desc.append(full_perfect)"""
 
 for lines in full1:
 	full_desc.append( str(lines.encode('UTF-8')) )
+
+for lines in brief1:
+	full_desc.remove( str(lines.encode('UTF-8')) )
 
 # Variable for the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
