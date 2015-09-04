@@ -8,13 +8,12 @@ soup = BeautifulSoup (open('form2.html'), 'html.parser')
 
 f = csv.writer(open('form2_output.csv', 'w'))
 f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Collection Description', 
-	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 
-	'Citation', 'Creative Commons Licensing'])
+	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Creative Commons Licensing'])
 
 # Variable to find the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
 # slice only the characters we need
-title =  title[19:]
+title =  title[20:]
 
 # Variable to find names
 # Finds all names, then puts them into an empty list sliced 
@@ -23,18 +22,18 @@ title =  title[19:]
 u_names = soup.find_all(string=re.compile(r'\s Full Name', flags=re.MULTILINE | re.UNICODE)) 
 names = []
 for name in u_names:
-	names.append( str(name[22:].encode('UTF-8')) )
+	names.append( str(name[23:].encode('UTF-8')) )
 	continue
 
 # Variable to find the date
 date = soup.find(string=re.compile(r'^Dates', flags=re.MULTILINE))
 # slice only the characters we need
-date = date[29:]
+date = date[30:]
 
 # Variable to find the date type
 date_type = soup.find(string=re.compile(r'^Date T', flags=re.MULTILINE))
 # slice only the characters we need
-date_type = date_type[12:]
+date_type = date_type[13:]
 
 # Set up Description sections header variables
 # Nice to have to get the responses on the next or previous lines
@@ -52,11 +51,11 @@ brief1 = brief_header_prev.find_all_next(string=True)
 
 # Append the empty full_desc list with ALL lines after header
 for lines in full1:
-	full_desc.append( str(lines.encode('UTF-8')) )
+	full_desc.append( str(lines[1:].encode('UTF-8')) )
 
 # Remove all unneeded lines from the full_desc list we just populated
 for lines in brief1:
-	full_desc.remove( str(lines.encode('UTF-8')) )
+	full_desc.remove( str(lines[1:].encode('UTF-8')) )
 
 # Variable to find the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
@@ -77,5 +76,5 @@ doi_request = doi_request[60:]
 cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
-f.writerow([title, '|'.join(names), date, date_type, ' '.join(full_desc), 
-	brief.encode('UTF-8'), exist_id, doi_request, '', cc])
+f.writerow([title, '| '.join(names), date, date_type, ' '.join(full_desc), 
+	brief.encode('UTF-8'), exist_id, doi_request, cc])
