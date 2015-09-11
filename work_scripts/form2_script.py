@@ -4,13 +4,15 @@ from bs4 import BeautifulSoup
 import csv
 import re
 
+# make the soup object as per instructions in Beautiful Soup 4, open the file using HTML parser
 soup = BeautifulSoup (open('form2.html'), 'html.parser')
 
+# write all our header rows
 f = csv.writer(open('form2_output.csv', 'w'))
 f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Keywords/Topics', 'Collection Description', 
 	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Creative Commons Licensing'])
 
-# Variable to find the collection title
+# variable to find the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
 # slice only the characters we need
 title =  title[20:]
