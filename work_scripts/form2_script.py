@@ -81,5 +81,5 @@ doi_request = doi_request[60:]
 cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
-f.writerow([title, '| '.join(names), date, date_type, keywords, ' '.join(full_desc), 
+f.writerow([title, '| '.join(names), date, date_type, keywords.replace(',', ' |'), ' '.join(full_desc), 
 	brief.encode('UTF-8'), exist_id, doi_request, cc])
