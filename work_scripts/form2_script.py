@@ -7,7 +7,7 @@ import re
 soup = BeautifulSoup (open('form2.html'), 'html.parser')
 
 f = csv.writer(open('form2_output.csv', 'w'))
-f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Collection Description', 
+f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Keywords/Topics', 'Collection Description', 
 	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Creative Commons Licensing'])
 
 # Variable to find the collection title
@@ -34,6 +34,11 @@ date = date[30:]
 date_type = soup.find(string=re.compile(r'^Date T', flags=re.MULTILINE))
 # slice only the characters we need
 date_type = date_type[13:]
+
+# Variable for keywords/topics
+keywords = soup.find(string=re.compile(r'^Keywords', flags=re.MULTILINE))
+# slice only the characters we need
+keywords = keywords[19:] 
 
 # Set up Description sections header variables
 # Nice to have to get the responses on the next or previous lines
@@ -76,5 +81,5 @@ doi_request = doi_request[60:]
 cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
-f.writerow([title, '| '.join(names), date, date_type, ' '.join(full_desc), 
+f.writerow([title, '| '.join(names), date, date_type, keywords, ' '.join(full_desc), 
 	brief.encode('UTF-8'), exist_id, doi_request, cc])
