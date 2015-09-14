@@ -64,6 +64,12 @@ for lines in full1:
 for lines in brief1:
 	full_desc.remove( str(lines[1:].encode('UTF-8')) )
 
+# badlines = full_desc.find_all(string=re.compile(r'^\W'))
+
+#for line in full_desc:
+#	if line.startswith(' '):
+#		re.sub(r'^ ','', lines, flags=re.MULTILINE | re.UNICODE)
+
 # Variable to find the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
 
