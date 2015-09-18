@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import csv
 import re
 
-# make the soup object as per instructions in Beautiful Soup 4, open the file using HTML parser
+# make the soup object as per instructions in Beautiful Soup 4, open the file and use HTML parser
 soup = BeautifulSoup (open('form2.html'), 'html.parser')
 
 # write all our header rows
@@ -58,11 +58,13 @@ brief1 = brief_header_prev.find_all_next(string=True)
 
 # Append the empty full_desc list with ALL lines after header
 for lines in full1:
-	full_desc.append( str(lines[1:].encode('UTF-8')) )
+	lines = lines.lstrip()
+	full_desc.append( str(lines.encode('UTF-8')) )
 
 # Remove all unneeded lines from the full_desc list we just populated
 for lines in brief1:
-	full_desc.remove( str(lines[1:].encode('UTF-8')) )
+	lines = lines.lstrip()
+	full_desc.remove( str(lines.encode('UTF-8')) )
 
 # badlines = full_desc.find_all(string=re.compile(r'^\W'))
 
@@ -89,5 +91,5 @@ doi_request = doi_request[60:]
 cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
-f.writerow([title, '| '.join(names), date, date_type, keywords.replace(',', ' |'), ' '.join(full_desc), 
+f.writerow([title, '| '.join(names), date, date_type, keywords.replace(',', ' |'), '\n'.join(full_desc), 
 	brief.encode('UTF-8'), exist_id, doi_request, cc])
