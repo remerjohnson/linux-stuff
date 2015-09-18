@@ -10,7 +10,7 @@ soup = BeautifulSoup (open('form2.html'), 'html.parser')
 # write all our header rows
 f = csv.writer(open('form2_output.csv', 'w'))
 f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Keywords/Topics', 'Collection Description', 
-	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Creative Commons Licensing'])
+	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Funding Sources', 'Creative Commons Licensing'])
 
 # variable to find the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
@@ -66,11 +66,6 @@ for lines in brief1:
 	lines = lines.lstrip()
 	full_desc.remove( str(lines.encode('UTF-8')) )
 
-# badlines = full_desc.find_all(string=re.compile(r'^\W'))
-
-#for line in full_desc:
-#	if line.startswith(' '):
-#		re.sub(r'^ ','', lines, flags=re.MULTILINE | re.UNICODE)
 
 # Variable to find the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
@@ -79,9 +74,14 @@ brief = brief_header.find_next(string=True)
 exist_id = soup.find(string=re.compile(r'^Do you al', flags=re.MULTILINE))
 exist_id = exist_id[50:]
 
-#
+# Variable to find the request (yes/no) for DOIs for each object
 doi_request = soup.find(string=re.compile(r'^Do you wa', flags=re.MULTILINE))
 doi_request = doi_request[60:]
+
+# Variable for the funding header line
+funding_header = soup.find(string=re.compile(r'^Describe any fun', flags=re.MULTILINE))
+# Variable to isolate the line after the header
+funding = funding_header.find_next(string=True)
 
 # Variable for citations  <-- improve /w break loop?
 # citation_header = soup.find(string=re.compile(r'^If the ', flags=re.MULTILINE))
@@ -92,4 +92,4 @@ cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
 f.writerow([title, '| '.join(names), date, date_type, keywords.replace(',', ' |'), '\n'.join(full_desc), 
-	brief.encode('UTF-8'), exist_id, doi_request, cc])
+	brief.encode('UTF-8'), exist_id, doi_request, funding.encode('UTF-8'), cc])
