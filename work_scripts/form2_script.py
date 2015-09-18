@@ -70,6 +70,7 @@ for lines in brief1:
 
 # Variable to find the brief description, which takes the header then grabs next string
 brief = brief_header.find_next(string=True)
+brief = brief[2:]
 
 # Variable to find response to the question of if they already have identifiers for the data
 exist_id = soup.find(string=re.compile(r'^Do you al', flags=re.MULTILINE))
@@ -83,11 +84,14 @@ doi_request = doi_request[60:]
 funding_header = soup.find(string=re.compile(r'^Describe any fun', flags=re.MULTILINE))
 # Variable to isolate the line after the header. NOTE: this only finds one line. Is this a multi-line field?
 funding = funding_header.find_next(string=True)
+funding = funding[2:]
+
 
 # Variable for the other sources header
 other_sources_header = soup.find(string=re.compile(r'^If the data ', flags=re.MULTILINE))
 # Variable to isolate the line adter the header. NOTE: this only finds one line. Is this a multi-line field?
 other_sources = other_sources_header.find_next(string=True)
+other_sources = other_sources[2:]
 
 # Variable for citations  <-- improve /w break loop?
 # citation_header = soup.find(string=re.compile(r'^If the ', flags=re.MULTILINE))
