@@ -11,7 +11,7 @@ soup = BeautifulSoup (open('form2.html'), 'html.parser')
 f = csv.writer(open('form2_output.csv', 'w'))
 f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Keywords/Topics', 'Collection Description', 
 	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Funding Sources', 'Other Sources of Data', 
-	'Creative Commons Licensing'])
+	'Creative Commons Licensing', 'Embargo?'])
 
 # variable to find the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
@@ -86,20 +86,19 @@ funding_header = soup.find(string=re.compile(r'^Describe any fun', flags=re.MULT
 funding = funding_header.find_next(string=True)
 funding = funding[2:]
 
-
 # Variable for the other sources header
 other_sources_header = soup.find(string=re.compile(r'^If the data ', flags=re.MULTILINE))
 # Variable to isolate the line adter the header. NOTE: this only finds one line. Is this a multi-line field?
 other_sources = other_sources_header.find_next(string=True)
 other_sources = other_sources[2:]
 
-# Variable for citations  <-- improve /w break loop?
-# citation_header = soup.find(string=re.compile(r'^If the ', flags=re.MULTILINE))
-# citation = citation_header.find_next(string=True)
-
 # Variable for Creative Commons Licensing decision
 cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
+# Variable for the embargo question
+embargo = soup.find(string=re.compile(r'^Embargo ', flags=re.MULTILINE))
+embargo = embargo[18:] 
+
 f.writerow([title, '| '.join(names), date, date_type, keywords.replace(',', ' |'), '\n'.join(full_desc), 
-	brief.encode('UTF-8'), exist_id, doi_request, funding.encode('UTF-8'), other_sources.encode('UTF-8'), cc])
+	brief.encode('UTF-8'), exist_id, doi_request, funding.encode('UTF-8'), other_sources.encode('UTF-8'), cc, embargo.encode('UTF-8')])
