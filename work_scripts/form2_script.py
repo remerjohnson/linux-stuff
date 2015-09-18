@@ -10,8 +10,8 @@ soup = BeautifulSoup (open('form2.html'), 'html.parser')
 # write all our header rows
 f = csv.writer(open('form2_output.csv', 'w'))
 f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Keywords/Topics', 'Collection Description', 
-	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Funding Sources', 'Other Sources of Data', 
-	'Creative Commons Licensing', 'Embargo?'])
+	'Brief Description', ' Are There Existing identifiers?', ' Want DOIs for each object?', 'Funding Sources', 
+	'Other Sources of the Data', 'Creative Commons Licensing', 'Need an Embargo?', 'Limited Lifetime Desire?'])
 
 # variable to find the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
@@ -100,5 +100,10 @@ cc = cc[35:]
 embargo = soup.find(string=re.compile(r'^Embargo ', flags=re.MULTILINE))
 embargo = embargo[18:] 
 
+# Variable for the limited lifetime question
+lifetime = soup.find(string=re.compile(r'^Limited Life', flags=re.MULTILINE))
+lifetime = lifetime[20:]
+
 f.writerow([title, '| '.join(names), date, date_type, keywords.replace(',', ' |'), '\n'.join(full_desc), 
-	brief.encode('UTF-8'), exist_id, doi_request, funding.encode('UTF-8'), other_sources.encode('UTF-8'), cc, embargo.encode('UTF-8')])
+	brief.encode('UTF-8'), exist_id, doi_request, funding.encode('UTF-8'), other_sources.encode('UTF-8'), 
+	cc, embargo.encode('UTF-8'), lifetime.encode('UTF-8')])
