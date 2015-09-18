@@ -10,7 +10,8 @@ soup = BeautifulSoup (open('form2.html'), 'html.parser')
 # write all our header rows
 f = csv.writer(open('form2_output.csv', 'w'))
 f.writerow(['Title', 'Names', 'Date', 'Date Type', 'Keywords/Topics', 'Collection Description', 
-	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Funding Sources', 'Creative Commons Licensing'])
+	'Brief Description', 'Existing identifiers?', 'DOIs for each object?', 'Funding Sources', 'Other Sources of Data', 
+	'Creative Commons Licensing'])
 
 # variable to find the collection title
 title = soup.find(string=re.compile(r'^Collection Title', flags=re.MULTILINE))
@@ -80,8 +81,13 @@ doi_request = doi_request[60:]
 
 # Variable for the funding header line
 funding_header = soup.find(string=re.compile(r'^Describe any fun', flags=re.MULTILINE))
-# Variable to isolate the line after the header
+# Variable to isolate the line after the header. NOTE: this only finds one line. Is this a multi-line field?
 funding = funding_header.find_next(string=True)
+
+# Variable for the other sources header
+other_sources_header = soup.find(string=re.compile(r'^If the data ', flags=re.MULTILINE))
+# Variable to isolate the line adter the header. NOTE: this only finds one line. Is this a multi-line field?
+other_sources = other_sources_header.find_next(string=True)
 
 # Variable for citations  <-- improve /w break loop?
 # citation_header = soup.find(string=re.compile(r'^If the ', flags=re.MULTILINE))
@@ -92,4 +98,4 @@ cc = soup.find(string=re.compile(r'^Creative ', flags=re.MULTILINE))
 cc = cc[35:]
 
 f.writerow([title, '| '.join(names), date, date_type, keywords.replace(',', ' |'), '\n'.join(full_desc), 
-	brief.encode('UTF-8'), exist_id, doi_request, funding.encode('UTF-8'), cc])
+	brief.encode('UTF-8'), exist_id, doi_request, funding.encode('UTF-8'), other_sources.encode('UTF-8'), cc])
