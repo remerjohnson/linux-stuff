@@ -4,7 +4,8 @@
 
 # Requirements
 
-Python 2.7.x
+* Python 2.7.x  
+* [BeautifulSoup 4.4](http://www.crummy.com/software/BeautifulSoup/bs4/download/) - [Beautiful documentation](http://www.crummy.com/software/BeautifulSoup/bs4/doc/)  
 
 # Usage 
 
