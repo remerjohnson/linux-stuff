@@ -104,5 +104,5 @@ cc = cc[35:]
 # lifetime = soup.find(string=re.compile(r'^Limited Life', flags=re.MULTILINE))
 # lifetime = lifetime[20:]
 
-f.writerow([title, '| '.join(names), date, date_type, keywords.replace(',', ' |'), '\n'.join(full_desc), 
+f.writerow([title, '| '.join(names), date, date_type, keywords.replace(';', ' |'), '\n'.join(full_desc), 
 	brief.encode('UTF-8'), exist_id, doi_request, funding.encode('UTF-8'), other_sources.encode('UTF-8'), cc])
