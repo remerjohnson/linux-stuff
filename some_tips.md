@@ -1,7 +1,7 @@
 # Some tips 
 
-The proper place to put bash scripts and aliases, besides /usr/bin is:
-/etc/bash.bashrc
+The proper place to put bash scripts is /usr/bin or ~/bin  
+For simple aliases, /etc/bash.bashrc BUT, if they're just variables, try ~/.bash_aliases  
 
 To switch from a default shell to another:
   
