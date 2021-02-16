@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# Directions: add to PATH by editing e.g. .bashrc file and adding the alias
+# `alias update ="sh ~/bin/update"` 
+
 sudo apt-get update \
 && sudo apt-get $1 upgrade --show-upgraded \
 && sudo apt-get $1 dist-upgrade \
